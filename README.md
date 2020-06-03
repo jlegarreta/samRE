@@ -14,7 +14,7 @@ Given a Samsung firmware ROM, the samdump script will:
 
 Currently, this tool is designed to run on Mac OS X, however with some minor modifications should be able to run on Linux. This is on my to-do list.
 ## Dependencies
-The samdump script depends on [lz4](https://github.com/lz4/lz4) and [ext4fuse](https://osxfuse.github.io/) (which requires osxfuse). It also depends on GNU [parallel](https://www.gnu.org/software/parallel/) as samdump takes advantage of parallel processing to reduce the amount of time it takes to decompile files. You can install these dependencies in homebrew:
+The samdump script depends on [lz4](https://github.com/lz4/lz4) and [ext4fuse](https://github.com/gerard/ext4fuse) (which requires [osxfuse](https://osxfuse.github.io/)). It also depends on GNU [parallel](https://www.gnu.org/software/parallel/) as samdump takes advantage of parallel processing to reduce the amount of time it takes to decompile files. You can install all these dependencies via homebrew:
 ```
 brew cask install osxfuse
 brew install lz4 ext4fuse parallel
