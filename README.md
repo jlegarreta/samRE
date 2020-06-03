@@ -1,7 +1,7 @@
 # samRE
 samRE is a toolkit for reverse engineering Samsung Android ROMs, featuring a script I wrote called [samdump](../master/bin/samdump).
 
-The samdump script will:
+Given a Samsung firmware ROM, the samdump script will:
 * Untar the ROM file
 * Decompress the images
 * Convert the images to raw format
