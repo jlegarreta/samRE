@@ -8,7 +8,7 @@ Given a Samsung firmware ROM, the samdump script will:
 * Mount the images
 * Extract the filesystems
 * Unpack the APKs
-* Convert the VDEX files to DEX
+* Convert the VDEX files to DEX (in some cases, extract the CDEX from the VDEX and convert to DEX)
 * Convert the DEX files to JAR
 * Decompile all the JARs to Java source code.
 
