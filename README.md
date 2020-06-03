@@ -1,0 +1,2 @@
+# samRE
+Samsung Firmware Extractor
