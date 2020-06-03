@@ -25,7 +25,7 @@ NOTE: I highly suggest using a case-sensitive partition/APFS container or disk i
 ## Usage
 ```
 source activate
-samdump.sh SAMSUMG_ROM.tar.md5
+samdump SAMSUMG_ROM.tar.md5
 ```
 ## Included tools
 * [dex2jar](https://github.com/pxb1988/dex2jar)
