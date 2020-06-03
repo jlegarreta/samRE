@@ -1,0 +1,125 @@
+#!/bin/bash
+set -ueo pipefail
+export LC_ALL=C
+
+main() {
+	FIRMWARE="${1:-}"
+	
+	if [[ -z "${FIRMWARE:-}" || "${FIRMWARE:-}" = "-h" ]]; then
+		echo "usage: samdump [-h] file.tar.md5"
+		exit
+	fi
+
+	stat -- "${FIRMWARE}" >/dev/null
+
+	if ! file --brief -- "${FIRMWARE}" | grep --quiet 'tar archive'; then
+		echo "Invalid Samsung ROM" >&2
+		exit 1
+	fi
+
+	OUTPUT_DIR="${FIRMWARE%.tar.md5}.dump"
+	mkdir -p "${OUTPUT_DIR}"/images
+	tar --file "${FIRMWARE}" --extract --directory "${OUTPUT_DIR}"/images
+	mkdir -p "${OUTPUT_DIR}"/filesystems
+
+	if ! sudo true; then
+		echo "Superuser privileges required to extract images." >&2
+		exit 1
+	fi
+
+	cd "${OUTPUT_DIR}"/images
+
+	echo "Uncompressing images..."
+	if unlz4 -dm *.lz4 &>/dev/null; then
+		rm -f *.lz4
+	fi
+
+	ls | while read file; do
+		if file --brief "${file}" | grep --quiet --extended-regexp '^Android sparse image'; then
+			echo "Found android sparse image: ${file}"
+			echo "Converting to raw image..."
+			rawimg="${file%.img}".raw
+			simg2img "${file}" "${rawimg}"
+			if file -b "${rawimg}" | grep --quiet --extended-regexp 'ext[234] filesystem data'; then
+				echo "Extracting data..."
+				mkdir mnt
+				sudo ext4fuse "${rawimg}" mnt -o allow_other
+				mkdir "${file%.img}"
+				cd mnt
+				sudo tar --create . | (cd ../"${file%.img}"; tar --file - --extract --no-same-owner)
+				cd ..
+				rm "${rawimg}"
+				mv "${file%.img}" ../filesystems
+				sudo umount mnt
+				rmdir mnt
+			fi
+		fi
+	done
+
+	cd ../filesystems
+	sudo chmod -R u+rwx .
+
+	set +e
+
+	echo "Unpacking APKs..."
+	apk_files=$(find . -type f -name '*.apk')
+	echo "${apk_files}" | parallel --quote unpackapk "{}" "{}.unpacked"
+
+	echo "Converting VDEX files to DEX..."
+	vdex_files=$(find . -type f -name '*.vdex')
+	echo "${vdex_files}" | parallel --quote vdex2dex "{}" "{//}"
+
+	echo "Converting DEX files to JAR..."
+	dex_files=$(find . -type f -name '*.dex' -exec bash -c 'file -b "{}" | grep --quiet --extended-regexp "^Dalvik dex file" && echo "{}"' ';')
+	echo "${dex_files}" | parallel --quote dex2jar "{}" "{.}.jar"
+
+	echo "Decompiling JAR files to Java..."
+	jar_files=$(find . -type f -name '*.jar')
+	echo "${jar_files}" | parallel --quote jar2java "{}" "{.}"
+
+	echo "All done!"
+}
+
+unpackapk() {
+	echo "${1}"
+	apktool decode --no-src "${1}" --output "${2}" >/dev/null
+}
+
+vdex2dex() {
+	echo "${1}"
+
+	# If VDEX contains CDEX, extract CDEX and convert to DEX
+	if strings "${1}" | grep --quiet --extended-regexp '.*cdex[0-9]{3}'; then
+		vdex2cdex "${1}" "${1%.vdex}.cdex"
+		compact_dex_converter -w "${2}" "${1%.vdex}.cdex" 2>&1 | grep --invert-match --extended-regexp '^Opened|StandardDex file successfully extracted'
+		mv "${1%.vdex}.cdex" "${1%.vdex}.dex"
+		return
+	fi
+
+	# Reduce VDEX file version if higher than 010 for vdexExtractor compatibility
+	vdex_version=$(dd if="${1}" bs=1 skip=5 count=2 2>/dev/null)
+	if [[ "${vdex_version#0}" -gt 10 ]]; then
+		echo -n 10 | dd of="${1}" bs=1 seek=5 count=2 conv=notrunc 2>/dev/null
+	fi
+
+	vdexExtractor --input="${1}" --output="${2}" --no-unquicken --ignore-crc-error
+}
+
+vdex2cdex() {
+	offset=$(tr '\n' $'\xFF' <"${1}" | grep --binary-files=text --only-matching --extended-regexp '.*cdex[0-9]{3}' | wc -c)
+	offset=$((offset-8))
+	dd if="${1}" ibs=1 skip="${offset}" of="${2}" 2>/dev/null
+}
+
+dex2jar() {
+	echo "${1}"
+	d2j-dex2jar.sh --output "${2}" --skip-exceptions --not-handle-exception "${1}" 2>&1 | grep --invert-match --extended-regexp '^(GLITCH|dex2jar)'
+}
+
+jar2java() {
+	echo "${1}"
+	cfr --silent true --outputdir "${2}" "${1}" >/dev/null
+}
+
+export -f vdex2cdex jar2java dex2jar vdex2dex unpackapk
+main "${1:-}"
