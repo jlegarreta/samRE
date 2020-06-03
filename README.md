@@ -20,6 +20,8 @@ brew cask install osxfuse
 brew install lz4 ext4fuse
 ```
 You will also need Java. This has been tested with JDK 14.0.1 on MacOS 10.15.4.
+
+NOTE: I highly suggest using a case-sensitive partition/APFS container or disk image for running these tools to avoid conflicts.
 ## Usage
 ```
 source activate
