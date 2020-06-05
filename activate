@@ -1,2 +1,4 @@
-BASEDIR=$(bash -c "cd "$(dirname "$(pwd)/${BASH_SOURCE}")"; pwd")
+export RELDIR=$(dirname "${BASH_SOURCE}")
+BASEDIR=$(cd "${RELDIR}" && pwd)
+#BASEDIR=$(bash -c "cd "$(dirname "$(pwd)/${BASH_SOURCE}")"; pwd")
 export PATH="${BASEDIR}/bin:${BASEDIR}/bin/dex-tools:${BASEDIR}/bin/simg2img:${PATH}"
