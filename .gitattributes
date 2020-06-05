@@ -3,3 +3,4 @@
 bin/vdexExtractor filter=lfs diff=lfs merge=lfs -text
 bin/compact_dex_converter filter=lfs diff=lfs merge=lfs -text
 bin/simg2img/** filter=lfs diff=lfs merge=lfs -text
+bin/abootimg filter=lfs diff=lfs merge=lfs -text
