@@ -34,3 +34,4 @@ samdump SAMSUMG_ROM.tar.md5
 * [apktool](https://ibotpeaches.github.io/Apktool) (version 2.4.1)
 * [cfr](https://www.benf.org/other/cfr) (version 0.150)
 * [simg2img](https://android.googlesource.com/platform/system/core/+/refs/heads/master/libsparse) (commit [c44f50c](https://android.googlesource.com/platform/system/core/+/c44f50ca587aefac5505a1f1298e5c01da63baca))
+* [Heimdall](https://gitlab.com/BenjaminDobell/Heimdall) (version 1.4.2)
