@@ -35,3 +35,4 @@ samdump SAMSUMG_ROM.tar.md5
 * [cfr](https://www.benf.org/other/cfr) (version 0.150)
 * [simg2img](https://android.googlesource.com/platform/system/core/+/refs/heads/master/libsparse) (commit [c44f50c](https://android.googlesource.com/platform/system/core/+/c44f50ca587aefac5505a1f1298e5c01da63baca))
 * [Heimdall](https://gitlab.com/BenjaminDobell/Heimdall) (version 1.4.2)
+* [abootimg](https://github.com/ggrandou/abootimg) (commit [7e127fe](https://github.com/ggrandou/abootimg/tree/7e127fee6a3981f6b0a50ce9910267cd501e09d4))
