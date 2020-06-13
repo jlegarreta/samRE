@@ -29,8 +29,8 @@ samdump SAMSUMG_ROM.tar.md5
 ```
 ## Included tools
 * [dex2jar](https://github.com/pxb1988/dex2jar) (commit [d7a86110](https://github.com/pxb1988/dex2jar/tree/d7a86110baba3f845973017021fb10664b1b90d2))
-* [vdexExtractor](https://github.com/anestisb/vdexExtractor) (commit [3fa69ec](https://github.com/anestisb/vdexExtractor/tree/78f283b60ab6991fa27eeaff7d7be16409401c08))
-* [compact_dex_converter](https://github.com/anestisb/vdexExtractor/blob/master/README.md) (commit [3fa69ec](https://github.com/anestisb/vdexExtractor/tree/78f283b60ab6991fa27eeaff7d7be16409401c08))
+* [vdexExtractor](https://github.com/anestisb/vdexExtractor) (commit [78f283b](https://github.com/anestisb/vdexExtractor/tree/78f283b60ab6991fa27eeaff7d7be16409401c08))
+* [compact_dex_converter](https://github.com/anestisb/vdexExtractor/blob/master/README.md) (commit [78f283b](https://github.com/anestisb/vdexExtractor/tree/78f283b60ab6991fa27eeaff7d7be16409401c08))
 * [apktool](https://ibotpeaches.github.io/Apktool) (version 2.4.1)
 * [cfr](https://www.benf.org/other/cfr) (version 0.150)
 * [simg2img](https://android.googlesource.com/platform/system/core/+/refs/heads/master/libsparse) (commit [c44f50c](https://android.googlesource.com/platform/system/core/+/c44f50ca587aefac5505a1f1298e5c01da63baca))
